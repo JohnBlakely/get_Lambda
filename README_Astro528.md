@@ -107,7 +107,7 @@ Parent Directory is get_Lambda
   * stop
 - config.jl
 - utilities.jl
-- recfast2.jl
+- RecfastJulia2.jl
 - create_DarkKROME_Equilibrium_Tables.jl
 - get_Lambda.jl
 - constraints.jl
