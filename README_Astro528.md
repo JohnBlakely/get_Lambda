@@ -1,3 +1,29 @@
+# Structure of this ReadMe #
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 This project is focused on constraining the properties of the Atomic Dark Matter Model (aDM)
 
 In aDM, dark matter is composed of a heavy particle, a "dark proton", and a lighter particle, a "dark electron". These interact via a dark boson, a "dark photon" with a dark U(1) gauge symmetry, at a strength governed by a dark fine structure constant. Interestingly, this would allow the dark matter to radiate some of its energy (and "cool") by self-interacting and even forming bound states like dark atomic, and molecular, hydrogen. Because of this we can model the dark self-interactions using much of the same tools as the Standard Model (SM), but rescaled by the values of  
