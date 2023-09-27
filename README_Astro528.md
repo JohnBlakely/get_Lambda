@@ -18,7 +18,7 @@ In the Atomic Dark Matter Model (aDM), some fraction of dark model is made up of
 
 Because of the model's similarity to the SM, we can use much of the same tools just rescaled by the model parameters ([2106.13245](https://arxiv.org/abs/2106.13245), [2110.11964](https://arxiv.org/abs/2110.11964), [2110.11971](https://arxiv.org/abs/2110.11971)).
 
-## Review of the Parameters Used to Study the Collapse of aDM Halos ##
+## Review of the Parameters Used ##
 - n: The density of the aDM "gas"
 - T: The temperature of the aDM gas
 - z: The redshift
@@ -28,6 +28,19 @@ Because of the model's similarity to the SM, we can use much of the same tools j
 - epsilon: The fraction of dark matter composed of aDM
 - xi: The ratio of the temperature of the dark photon background to the CMB
    * This is important because aDM will have a complex cosmological evolution which places massive constraints on the model ([1209.5752](https://arxiv.org/abs/12909.57572), [1310.3278](https://arxiv.org/abs/1310.3278), [2110.11964](https://arxiv.org/abs/2110.11964), [2209.05209](https://arxiv.org/abs/2209.05209)), but this isn't relavent to this class. Xi also has a massive influence on the dark chemical abundances: low xi -> The Dark Recombination Epoch happened way earlier -> More dark hydrogen can form, and vice-versa.
+ - M_Halo: The aDM Halo Mass
+   * Important for some of the cosmology stuff in the code, not used in the parts relevant to the class
+ - x_e: The dark electron abundance
+ - x_p: The dark proton abundance
+ - x_H: The dark atomic hydrogen abundance
+ - x_Hm: The dark $H^-$ abundance
+ - x_H2: The dark molecular hydrogen abundance
+ - x_H2p: The dark $H_2^+$ abundance
+ - x_H3p: The dark $H_3^+$ abundance
+ - x: The dark ionization fraction
+ - n_bar: Background aDM density
+ - T_g: Background temperature of the aDM gas
+   * n_bar and T_g are used to set the lower bound on n and T at a given redshift. For simplicity, points which lie below this will be set to the background chemistry at that redshift
  
 
 # This Project #
@@ -45,40 +58,58 @@ Moreover, this massive monstrosity will need to be interpolated over.
 On top of that, the code will need to be stoppable and restartable, because it's expected to take past 48 hrs (because I'm an undergrad and have negative funding, I can't buy more resources). This means that there will need to be a method to dump the data, know where to start again, and be able to construct the data into a single 8d data grid
 
 And then the final big issue, the dark chemistry solver we have (DarkKROME: [2110.11971](https://arxiv.org/abs/2110.11971)) is slow and innacurate for large parts of the parameter space boundaries. If it was used as is for this project it would:
-A. Write out a ton of files each of the ~50,000 times it'll have to be compiled
-B. Take over a year, maybe. Considering running it over 1/400 of the parameter space took ~1.5 days
-C. Not be thread safe at large since four of the eight dimensions will need to be recompiled at every point; and everytime it is recompiled, it writes in a number of files.
+
+ 1. Write out a ton of files each of the ~50,000 times it'll have to be compiled
+ 2. Take over a year, maybe. Considering running it over 1/400 of the parameter space took ~1.5 days
+ 3. Not be thread safe at large since four of the eight dimensions will need to be recompiled at every point; and everytime it is recompiled, it writes in a number of files
+
+Plus it would make this project like 85% Fortran 90.
+
+### The Solution (Attempt) ###
+So the central part of this code is going to be the same used in [2309.05758](https://arxiv.org/abs/2309.05758), where they modified, an already modified [2110.11964](https://arxiv.org/abs/2110.11964) version of Recfast [astro-ph/9909275](https://arxiv.org/abs/astro-ph/9909275) (The first modification was done by James Gurian, who rewrote it in Julia and for the aDM model) to not only calculate the evolution of the dark recombinatination epoch, but also evolve th chemistry at constant density. 
+
+Here are the major modifications that will be done to the actual chemistry solver from James Gurian:
+
+1. It will be modified to run at constant T and n for the age of the universe at that z
+2. For a given n and T, it will return the required values at each every z. So it won't need to restarted at each z
+3. (_Maybe_) The chemistry will be even further simplified by following [astro-ph/9603007](https://arxiv.org/abs/astro-ph/9603007), and getting rid of every ODE for the chemical abundances EXCEPT the dark x_e, x_p, x_H, x_H2. Then by requiring charge neutrality (x_e = x_p = x) and that x_H = (1-x-2x_H2), we can go from the 9 ODEs that DarkKROME uses (techinically it's 21, but only 9 are used for aDM) to only 2
+
+Of course this doesn't include the actual code which executes this, and manages the results. The general overview of the code which generates the tables is the following:
+
+- There will be code that runs the chemistry evolution at a single (n, T) (from the ICs calculated higher up) and return the (n, T, z) result
+  * Then after this, the result will be written into an individual HDF5 dataset, titles by its point in the 5d parameter space. This will then be compressed using GZIP. Finally it will update an outside (still in the HDF5 file) 5d array of binary types from 0 to 1, at the corresponding coordinate
+     + This will make sure that at any point we don't have much more than 10-20 MB of allocated memory
+     + Also it will keep the HDF5 from exploding in size
+     + Finally, it makes it so there doesn't need to be a designated dump functionality. And restarting will require only reading in that outside dataset, determine what cartesian indexes are 0's, and then going through the parameters and only run over the ones which are at the corresponding points.
+- There will be code which takes that and assigns it to threads (maybe those of a single core, that way 38 can run on points in the 5d space) over the (n, T) space. Then instead of passing it in as a variable, it will write it out and return nothing
+- There will be code which executes James's Recfast code to calculate the chemical ICs. Then it will pass in (or defined globally with respect to the parallel code, somehow) the initial abundances, n_bar, and T_g, to the parallel code. Then, finally, it executes the parallel code.
+- There will be (if I run parallel over the cpus) code which runs the previous in parallel
+- In the output file, there will be the HDF5 file containing this, a text file which keeps track of the last point in 5d space succesfully ran, as well as the time, percenct done, and when the code has been stopped and restarted, and an error file containing any error messages generated and their corresponding point in 8d space
+- Also some code will read in the config file and write some of its contents of attributes of the outside binary dataset
+
+For the code which interpolates over the table, the overview is:
+
+- There will be code which takes an input and finds the first indexes in the range of the evaluated dimensions (from the HDF5 file) then finds the first pair of points that contain the input variable (unless it equals one of them)
+  * Done for all 8 parameters
+- Then there will be code which opens the two + chunks which contain the inputs, then read these in as a (2,2,2,2,2,2,2,2) array.
+  * I could attempt to do something more non-linear to interpolate and call in 4 total chunks
+- Then there will be something that finds fractional "index" the point has wrt the new array
+- Then there will finally be some code which interpolates over it
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-This is incredibly daunting. Thankfully, we already have a chemistry solver made for aDM (DarkKROME (cite the paper)). However, it would take way too long (~ hundreds of days) to run over the parameter space, so I had to get creative.
-
-The approach that I'm taking is to approximate the chemistry by running it until it reaches equilibrium for fixed values of n, T, and z (instead of solving the differential equations that describe them). 
-
-The first attempt at this went fantastically (in the sense that it ran in 2 days). However, a new question arose; how long does the chemistry take to reach equilibrium? I have no idea, and I don't want to waste more resources figuring it out. So, because of this (and because it was extraordinarily inaccurate for a good amount of the parameter space) I completely scrapped this attempt.
-
-Now I'm rewriting the chemistry solver (DarkKROME) in Julia coupled with a modified version of Recfast (cite Recfast) to calculate the background parameters (really this is just taking a chemistry solver used in this paper (cite pop3 paper) and making it for constant temperature too, then absolutely mangling it to be ran in parallel over a massive parameter space). The code has three parts:
-
-    "generate_DarkKROME_Equilibrium_Tables.jl" (fantastic filename) This will generate the lookup tables containing the cooling rate and dark molecular fraction, which we will interpolate over in part 2. This is going to be where most of the content from this class comes in. It will need to be highly parallel, with VERY efficient memory allocation. It will also need to use HDF5 in a proficient manner to store hundreds of gigabytes of floats in a compressed, accessible manner.
-    "get_Lambda.jl" This will take that data grid and access only the relevant chunks and interpolate over it. This needs to be efficient because it will be broadcasted over. 
-    "constraints.jl" This will use the code in get_Lambda to determine if it satisfies the observational constraints. Not important for this class, and won't be submitted, but I'm including it for completeness.
-
+## Code Structure ##
+Parent Directory is get_Lambda
+- Output Directory
+  * darkKROME_Equilibrium_Table.hdf5
+  * log.txt
+  * error_log.txt
+  * stop
+- config.jl
+- utilities.jl
+- recfast2.jl
+- create_DarkKROME_Equilibrium_Tables.jl
+- get_Lambda.jl
+- constraints.jl
+- observational_Constraints.jl
 
