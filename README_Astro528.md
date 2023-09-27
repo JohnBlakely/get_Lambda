@@ -8,6 +8,9 @@
   * How to Use
 - History
 
+# The Atomic Dark Matter Model #
+In the Atomic Dark Matter Model (aDM), some fraction of dark model is made up of a heavy dark particle, a ``dark proton''
+
 
 
 
