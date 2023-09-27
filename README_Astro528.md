@@ -2,10 +2,10 @@
 
 - The Atomic Dark Matter Model
 - This Project
-      - Goals
-      - The Computational Challenges
-      - Code Structure
-      - How to Use
+ - Goals
+ - The Computational Challenges
+ - Code Structure
+ - How to Use
 - History
 
 
