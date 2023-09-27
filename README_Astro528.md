@@ -12,7 +12,7 @@
 
 # The Atomic Dark Matter Model #
 ## The Model ##
-In the Atomic Dark Matter Model (aDM), some fraction of dark model is made up of a heavy dark particle, a "dark proton", and a lighter dark particle, a "dark electron". These two particles interact via a dark gauge boson, a "dark photon", at a strength governed by a dark fine structure constant.
+In the Atomic Dark Matter Model (aDM), some fraction of dark model is made up of a heavy dark particle, a "dark proton", and a lighter dark particle, a "dark electron". These two particles interact via a dark gauge boson, a "dark photon", at a strength governed by a dark fine structure constant ([0810.5126](https://arxiv.org/abs/0810.5126) & [0909.0753](https://arxiv.org/abs/0909.0753)). These interactions allow for dark matter halos to radiate away some of its energy, via the formation/evolution of dark bound states (i.e. dark "atomic and molecular hydrogen") through complex dark chemistry, possibly alleviating the tensions of the Cold Dark Matter Model ($\Lambda$CDM) on small scales. Moreover, this introduces the possibiliy for dark matter to form unique compact objects (i.e. sub-solar mass black holes, dark neutron stars, etc.) and/or effect the formation/evolution of Standard Model (SM) small scale structure (i.e. 
 
 
 
