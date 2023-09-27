@@ -14,6 +14,9 @@
 ## The Model ##
 In the Atomic Dark Matter Model (aDM), some fraction of dark model is made up of a heavy dark particle, a "dark proton", and a lighter dark particle, a "dark electron". These two particles interact via a dark gauge boson, a "dark photon", at a strength governed by a dark fine structure constant ([0810.5126](https://arxiv.org/abs/0810.5126) & [0909.0753](https://arxiv.org/abs/0909.0753)). These interactions allow for dark matter halos to radiate away some of its energy, via the formation/evolution of dark bound states (i.e. dark "atomic and molecular hydrogen") through complex dark chemistry ([1705.10341](https://arxiv.org/abs/1705.10341), [1707.03829](https://arxiv.org/abs/1707.03829), [2106.13245](https://arxiv.org/abs/2106.13245), [2110.11964](https://arxiv.org/abs/2110.11964), [2110.11971](https://arxiv.org/abs/2110.11971)), possibly alleviating the tensions of the Cold Dark Matter Model ($\Lambda$CDM) on small scales ([1707.04256](https://arxiv.org/abs/1707.04256)). Moreover, this introduces the possibiliy for dark matter to form unique compact objects (i.e. sub-solar mass black holes ([1802.08206](https://arxiv.org/abs/1802.08206), [2009.05209](https://arxiv.org/abs/2009.05209), [2209.00064](https://arxiv.org/abs/2209.00064), Possible Candidate: [2001.01761](https://arxiv.org/abs/2001.01761)) and dark neutron stars ([2201.05626](https://arxiv.org/abs/2201.05626))) and/or effect the formation/evolution of Standard Model (SM) small scale structure (i.e. POP III Stars ([2309.05758](https://arxiv.org/abs/2309.05758)), Milky Way Sub-Structure ([2304.09878](https://arxiv.org/abs/2304.09878)), and Black Holes ([1017.03419](https://arxiv.org/abs/1017.03419), [1812.03104](https://arxiv.org/abs/1812.03104), [2208.08557](https://arxiv.org/abs/2208.08557))). 
 
+## Review of the Parameters used to Study the Collapse of aDM Halos ##
+
+
 
 
 
