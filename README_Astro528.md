@@ -1,6 +1,8 @@
 # Structure of this ReadMe #
 
 - The Atomic Dark Matter Model
+  * The Model
+  * Review of the Parameters
 - This Project
   * Goals
   * The Computational Challenges
@@ -9,7 +11,8 @@
 - History
 
 # The Atomic Dark Matter Model #
-In the Atomic Dark Matter Model (aDM), some fraction of dark model is made up of a heavy dark particle, a ``dark proton''
+## The Model ##
+In the Atomic Dark Matter Model (aDM), some fraction of dark model is made up of a heavy dark particle, a "dark proton", and a lighter dark particle, a "dark electron". These two particles interact via a dark gauge boson, a "dark photon", at a strength governed by a dark fine structure constant.
 
 
 
