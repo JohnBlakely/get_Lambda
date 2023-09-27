@@ -24,7 +24,8 @@ Because of the model's similarity to the SM, we can use much of the same tools j
 - r_M (or r_MH): The ratio of the dark proton mass to the SM proton mass
 - r_alpha: The ratio of the dark fine structure constant to the SM fine structure constant
 - epsilon: The fraction of dark matter composed of aDM
-- xi: The ratio of the temperature of the dark photon background to the CMB (This is important because aDM will have a complex cosmological evolution which places massive constraints on the model ([1209.5752](https://arxiv.org/abs/12909.57572), [1310.3278](https://arxiv.org/abs/1310.3278), [2110.11964](https://arxiv.org/abs/2110.11964), [2209.05209](https://arxiv.org/abs/2209.05209)), but this isn't relavent to this class. Xi also has a massive influence on the dark chemical abundances: low xi -> The Dark Recombination Epoch happened way earlier -> More dark hydrogen can form, and vice-versa.)
+- xi: The ratio of the temperature of the dark photon background to the CMB
+   *This is important because aDM will have a complex cosmological evolution which places massive constraints on the model ([1209.5752](https://arxiv.org/abs/12909.57572), [1310.3278](https://arxiv.org/abs/1310.3278), [2110.11964](https://arxiv.org/abs/2110.11964), [2209.05209](https://arxiv.org/abs/2209.05209)), but this isn't relavent to this class. Xi also has a massive influence on the dark chemical abundances: low xi -> The Dark Recombination Epoch happened way earlier -> More dark hydrogen can form, and vice-versa.)
 
 
 
