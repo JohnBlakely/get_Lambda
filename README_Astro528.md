@@ -6,6 +6,8 @@
 - This Project
   * Goals
   * The Computational Challenges
+     + The Challenges
+     + The Solution (Attempts)
   * Code Structure
   * How to Use
 - History
@@ -25,7 +27,27 @@ Because of the model's similarity to the SM, we can use much of the same tools j
 - r_alpha: The ratio of the dark fine structure constant to the SM fine structure constant
 - epsilon: The fraction of dark matter composed of aDM
 - xi: The ratio of the temperature of the dark photon background to the CMB
-   * This is important because aDM will have a complex cosmological evolution which places massive constraints on the model ([1209.5752](https://arxiv.org/abs/12909.57572), [1310.3278](https://arxiv.org/abs/1310.3278), [2110.11964](https://arxiv.org/abs/2110.11964), [2209.05209](https://arxiv.org/abs/2209.05209)), but this isn't relavent to this class. Xi also has a massive influence on the dark chemical abundances: low xi -> The Dark Recombination Epoch happened way earlier -> More dark hydrogen can form, and vice-versa.)
+   * This is important because aDM will have a complex cosmological evolution which places massive constraints on the model ([1209.5752](https://arxiv.org/abs/12909.57572), [1310.3278](https://arxiv.org/abs/1310.3278), [2110.11964](https://arxiv.org/abs/2110.11964), [2209.05209](https://arxiv.org/abs/2209.05209)), but this isn't relavent to this class. Xi also has a massive influence on the dark chemical abundances: low xi -> The Dark Recombination Epoch happened way earlier -> More dark hydrogen can form, and vice-versa.
+ 
+
+# This Project #
+## Goals ##
+The big-picture goal of this project is to determine what parameter values let aDM halos cool, collapse, and maybe form compact objects, in a way that satisfies a number of observational constraints.
+
+However the goal of this project in the scope of this class is to calculate the dark chemistry at _every point_ in (n, T, z, r_m, r_M, r_alpha, epsilon, xi) space, accurately and efficiently. Then these results will be put into a data cube which the code will then interpolate over (again accurately and efficiently) to get the chemistry for any choice of those parameters.
+
+## The Computational Challenges ##
+### The Challenges ###
+So the code will need to calculate the Cooling Rate, the Dark Electron Fraction, and the Dark Molecular Hydrogen Fraction at every point in the parameter space. Given that each of these will be Float64, and that the resolution required is, around, - number of elements - (35, 35, 20, 20, 20, 20, 10, 10), the total memory needed is 470 BILLION BYTES (470 GB). 
+
+Moreover, this massive monstrosity will need to be interpolated over.
+
+On top of that, the code will need to be stoppable and restartable, because it's expected to take past 48 hrs (because I'm an undergrad and have negative funding, I can't buy more resources). This means that there will need to be a method to dump the data, know where to start again, and be able to construct the data into a single 8d data grid
+
+And then the final big issue, the dark chemistry solver we have (DarkKROME: [2110.11971](https://arxiv.org/abs/2110.11971)) is slow and innacurate for large parts of the parameter space boundaries. If it was used as is for this project it would:
+A. Write out a ton of files each of the ~50,000 times it'll have to be compiled
+B. Take over a year, maybe. Considering running it over 1/400 of the parameter space took ~1.5 days
+C. Not be thread safe at large since four of the eight dimensions will need to be recompiled at every point; and everytime it is recompiled, it writes in a number of files.
 
 
 
@@ -46,27 +68,6 @@ Because of the model's similarity to the SM, we can use much of the same tools j
 
 
 
-
-
-
-
-This project is focused on constraining the properties of the Atomic Dark Matter Model (aDM)
-
-In aDM, dark matter is composed of a heavy particle, a "dark proton", and a lighter particle, a "dark electron". These interact via a dark boson, a "dark photon" with a dark U(1) gauge symmetry, at a strength governed by a dark fine structure constant. Interestingly, this would allow the dark matter to radiate some of its energy (and "cool") by self-interacting and even forming bound states like dark atomic, and molecular, hydrogen. Because of this we can model the dark self-interactions using much of the same tools as the Standard Model (SM), but rescaled by the values of  
-the model parameters. These are:
-
-    r_m: the ratio of the dark electron mass to the SM electron mass
-    r_M (or r_MH): the ratio of the dark proton mass to the SM proton mass
-    r_alpha: the ratio of the dark fine structure constant to the SM fine structure constant
-    xi: the ratio of the temperature of the dark radiation background to the CMB (since aDM is similar to the SM it also has a very complex cosmological history; in short, this parameter can be thought of as: lower = more dark hydrogen, higher = more free dark particles)
-    epsilon: the fraction of DM which is aDM
-
-
-Since any good model needs to agree with observations, the goal of this project is to figure out what values of those parameters make aDM agree with these observations. The observations themselves aren't relevant for this class, but are just from the matter power spectrum, galaxy cluster collisions, and that we want it to make cool things like dark black holes (using the Rees-Ostriker-Silk constraint).
-
-So, for this project to be a success, it needs to do one very important thing:
-
-    Calculate the dark chemistry accurately and efficiently for a collapsing halo (with a density n, temperature T, and redshift z) over the entire 5-dimensional parameter space.
 
 This is incredibly daunting. Thankfully, we already have a chemistry solver made for aDM (DarkKROME (cite the paper)). However, it would take way too long (~ hundreds of days) to run over the parameter space, so I had to get creative.
 
