@@ -10,6 +10,7 @@
      + The Solution (Attempts)
   * Code Structure
   * How to Use
+- Places for Optimization
 - History
 
 # The Atomic Dark Matter Model #
@@ -112,4 +113,7 @@ Parent Directory is get_Lambda
 - get_Lambda.jl
 - constraints.jl
 - observational_Constraints.jl
+
+# Places for Optimization #
+- Replace every integral with it's analytic approximation from [1705.10341](https://arxiv.org/abs/1705.10341) and/or [2110.11971](https://arxiv.org/abs/2110.11971). This will save 2-ish seconds per integral with only a minimal to moderate impact on the accuracy. 
 
